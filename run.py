@@ -24,6 +24,7 @@ def train(args, data):
     optimizer = optim.Adadelta(parameters, lr=args.learning_rate)
     criterion = nn.CrossEntropyLoss()
 
+    #   给tensorboard记录日志信息
     writer = SummaryWriter(log_dir='runs/' + args.model_time)
 
     model.train()
@@ -39,9 +40,12 @@ def train(args, data):
             print('epoch:', present_epoch + 1)
         last_epoch = present_epoch
 
+        # 模型的预测
         p1, p2 = model(batch)
 
+        # SGD
         optimizer.zero_grad()
+        # 计算loss
         batch_loss = criterion(p1, batch.s_idx) + criterion(p2, batch.e_idx)
         loss += batch_loss.item()
         batch_loss.backward()
@@ -55,6 +59,7 @@ def train(args, data):
             dev_loss, dev_exact, dev_f1 = test(model, ema, args, data)
             c = (i + 1) // args.print_freq
 
+            # tensorboardX  key value形式存入
             writer.add_scalar('loss/train', loss, c)
             writer.add_scalar('loss/dev', dev_loss, c)
             writer.add_scalar('exact_match/dev', dev_exact, c)

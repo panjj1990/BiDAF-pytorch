@@ -11,7 +11,7 @@ from torchtext.vocab import GloVe
 def word_tokenize(tokens):
     return [token.replace("''", '"').replace("``", '"') for token in nltk.word_tokenize(tokens)]
 
-
+# 处理数据的类
 class SQuAD():
     def __init__(self, args):
         path = '.data/squad'
